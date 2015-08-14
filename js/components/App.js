@@ -1,3 +1,5 @@
+import 'babel/polyfill';
+
 class App extends React.Component {
   render() {
     return (
