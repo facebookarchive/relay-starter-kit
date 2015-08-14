@@ -12,7 +12,6 @@
     "babel": "5.8.21",
     "babel-loader": "5.3.2",
     "babel-relay-plugin": "^0.1.1",
-    "babel-runtime": "5.8.20",
     "webpack": "^1.10.5",
     "webpack-dev-server": "^1.10.1"
   },
