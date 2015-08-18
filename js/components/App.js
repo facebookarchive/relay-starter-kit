@@ -1,5 +1,7 @@
 import 'babel/polyfill';
 
+import {Link} from 'react-router';
+
 class App extends React.Component {
   render() {
     return (
@@ -7,7 +9,11 @@ class App extends React.Component {
         <h1>Widget list</h1>
         <ul>
           {this.props.viewer.widgets.edges.map(edge =>
-            <li>{edge.node.name} (ID: {edge.node.id})</li>
+            <li key={edge.node.id}>
+              <Link to={`/widget/${edge.node.id}`}>
+                {edge.node.name} (ID: {edge.node.id})
+              </Link>
+            </li>
           )}
         </ul>
       </div>
