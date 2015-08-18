@@ -4,8 +4,10 @@ import BrowserHistory from 'react-router/lib/BrowserHistory';
 import App from './components/App';
 import Widget from './components/Widget';
 
+// A wrapper to create a Relay container
 function createRelayContainer(Component, props) {
   if (Relay.isContainer(Component)) {
+    // Construct the RelayQueryConfig from the route and the router props.
     var {name, queries} = props.route;
     var {params} = props;
     return (
@@ -19,6 +21,7 @@ function createRelayContainer(Component, props) {
   }
 }
 
+// The root queries for the main site
 var HomeQueries = {
   viewer: (Component) => Relay.QL`
     query {
@@ -29,6 +32,7 @@ var HomeQueries = {
   `,
 };
 
+// The root queries for the widget site
 var WidgetQueries = {
   widget: (Component) => Relay.QL`
     query {
@@ -40,13 +44,15 @@ var WidgetQueries = {
 };
 
 React.render(
-  <Router history={new BrowserHistory()} createElement={createRelayContainer}>
+  <Router
+    history={new BrowserHistory()}
+    createElement={createRelayContainer}>
     <Route>
       <Route
-        name="home"
+        name="home" // added a name to the route
         path="/"
         component={App}
-        queries={HomeQueries}
+        queries={HomeQueries} // and the query
       />
       <Route
         name="widget"
