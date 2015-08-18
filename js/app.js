@@ -13,6 +13,7 @@ function createRelayContainer(Component, props) {
     return (
       <Relay.RootContainer
         Component={Component}
+        renderFetched={(data) => <Component {...props} {...data} />}
         route={{name, params, queries}}
       />
     );
