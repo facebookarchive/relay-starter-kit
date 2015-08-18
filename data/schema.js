@@ -92,7 +92,7 @@ var widgetType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('Widget'),
     name: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLString),
       description: 'The name of the widget',
     },
   }),
