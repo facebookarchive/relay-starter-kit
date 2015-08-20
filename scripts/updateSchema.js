@@ -24,6 +24,6 @@ async () => {
 
 // Save user readable type system shorthand of schema
 fs.writeFileSync(
-  path.join(__dirname, '../schema.graphql'),
+  path.join(__dirname, '../data/schema.graphql'),
   printSchema(Schema)
 );
