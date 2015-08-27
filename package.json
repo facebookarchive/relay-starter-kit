@@ -20,7 +20,7 @@
     "react": "^0.14.0-beta3",
     "react-relay": "^0.1.0",
     "react-router": "1.0.0-beta3",
-    "relay-nested-routes": "^0.3.1",
+    "react-router-relay": "^0.4.1",
     "webpack": "^1.10.5",
     "webpack-dev-server": "^1.10.1"
   }

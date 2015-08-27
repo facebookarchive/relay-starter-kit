@@ -1,5 +1,7 @@
 import 'babel/polyfill';
 
+import React from 'react';
+import Relay from 'react-relay';
 import {Link} from 'react-router';
 
 class Widget extends React.Component {
