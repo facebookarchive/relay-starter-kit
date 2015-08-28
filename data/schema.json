@@ -4,9 +4,7 @@
       "queryType": {
         "name": "Query"
       },
-      "mutationType": {
-        "name": "Mutation"
-      },
+      "mutationType": null,
       "types": [
         {
           "kind": "OBJECT",
@@ -413,16 +411,6 @@
               "ofType": null
             }
           ],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "Mutation",
-          "description": null,
-          "fields": [],
-          "inputFields": null,
-          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
         },

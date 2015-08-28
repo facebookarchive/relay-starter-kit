@@ -138,5 +138,6 @@ var mutationType = new GraphQLObjectType({
  */
 export var Schema = new GraphQLSchema({
   query: queryType,
-  mutation: mutationType
+  // Uncomment the following after adding some mutation fields:
+  // mutation: mutationType
 });
