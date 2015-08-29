@@ -10,6 +10,42 @@ const GRAPHQL_PORT = 8080;
 
 // Expose a GraphQL endpoint
 var graphQLServer = express();
+
+// Allow graphql endpoint to be loaded cross-origin so it works with
+// the GraphiQL example.
+// Lightly changed from http://stackoverflow.com/a/13148080.
+graphQLServer.use(function(req, res, next) {
+  var oneof = false;
+  if(req.headers.origin &&
+     req.headers.origin.match(/^https?:[/][/]localhost/)) {
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    oneof = true;
+  }
+  if(req.headers['access-control-request-method']) {
+    res.header(
+      'Access-Control-Allow-Methods',
+      req.headers['access-control-request-method']
+    );
+    oneof = true;
+  }
+  if(req.headers['access-control-request-headers']) {
+    res.header(
+      'Access-Control-Allow-Headers',
+      req.headers['access-control-request-headers']
+    );
+    oneof = true;
+  }
+  if(oneof) {
+    res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365);
+  }
+
+  // Intercept OPTIONS method.
+  if (oneof && req.method == 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 graphQLServer.use('/', graphQLHTTP({schema: Schema, pretty: true}));
 graphQLServer.listen(GRAPHQL_PORT, () => console.log(
   `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`
