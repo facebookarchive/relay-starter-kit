@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/node_modules/graphiql/graphiql.css" />
+    <script src="/node_modules/react/dist/react.min.js"></script>
+    <script src="/node_modules/whatwg-fetch/fetch.js"></script>
+    <script src="/node_modules/graphiql/graphiql.min.js"></script>
+  </head>
+  <body>
+    <div id="root" style="width: 100%; height: 100%">Loading...</div>
+    <script>
+      function graphQLFetcher(graphQLParams) {
+        return fetch(window.location.origin + '/graphql', {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(graphQLParams),
+        }).then(function (response) {
+          return response.json();
+        });
+      }
+      React.render(React.createElement(GraphiQL, { fetcher: graphQLFetcher }),
+        document.getElementById('root')
+      );
+    </script>
+  </body>
+</html>
