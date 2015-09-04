@@ -6,7 +6,7 @@ import ToggleWidgetEnableMutation from '../mutations/ToggleWidgetEnableMutation'
 class App extends React.Component {
   _handleToggleEnabled = (i) => {
     Relay.Store.update(new ToggleWidgetEnableMutation({
-      widget: this.props.viewer.widgets.edges[i].node
+      widget: this.props.viewer.widgets.edges[i].node,
     }));
   }
   
@@ -39,7 +39,7 @@ export default Relay.createContainer(App, {
               id,
               name,
               enabled,
-              ${ToggleWidgetEnableMutation.getFragment('widget')}
+              ${ToggleWidgetEnableMutation.getFragment('widget')},
             },
           },
         },

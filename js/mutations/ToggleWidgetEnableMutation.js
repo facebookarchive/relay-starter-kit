@@ -5,7 +5,7 @@ export default class ToggleWidgetEnableMutation extends Relay.Mutation {
     widget: () => Relay.QL`
       fragment on Widget {
         id,
-        enabled
+        enabled,
       }
     `,
   };
@@ -18,7 +18,7 @@ export default class ToggleWidgetEnableMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on ToggleWidgetEnablePayload {
         widget {
-          enabled
+          enabled,
         },
       }
     `;
@@ -43,7 +43,7 @@ export default class ToggleWidgetEnableMutation extends Relay.Mutation {
     return {
       widget: {
         id: this.props.widget.id,
-        enabled: !this.props.widget.enabled
+        enabled: !this.props.widget.enabled,
       }
     };
   }

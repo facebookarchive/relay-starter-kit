@@ -135,7 +135,7 @@ var ToggleWidgetEnableMutation = mutationWithClientMutationId({
   outputFields: {
     widget: {
       type: widgetType,
-      resolve: ({localWidgetId}) => getWidget(localWidgetId)
+      resolve: ({localWidgetId}) => getWidget(localWidgetId),
     }
   },
   mutateAndGetPayload: ({id}) => {
@@ -154,7 +154,7 @@ var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     // Add your own mutations here
-    toggleWidgetEnable: ToggleWidgetEnableMutation
+    toggleWidgetEnable: ToggleWidgetEnableMutation,
   })
 });
 
@@ -164,5 +164,5 @@ var mutationType = new GraphQLObjectType({
  */
 export var Schema = new GraphQLSchema({
   query: queryType,
-  mutation: mutationType
+  mutation: mutationType,
 });
