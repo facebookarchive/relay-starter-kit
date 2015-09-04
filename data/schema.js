@@ -37,7 +37,7 @@ import {
   getViewer,
   getWidget,
   getWidgets,
-  toggleWidgetEnable
+  toggleWidgetEnable,
 } from './database';
 
 /**
@@ -99,7 +99,7 @@ var widgetType = new GraphQLObjectType({
     // Something to mutate
     enabled: {
       type: GraphQLBoolean,
-      description: 'On/off toggle'
+      description: 'On/off toggle',
     }
   }),
   interfaces: [nodeInterface],
