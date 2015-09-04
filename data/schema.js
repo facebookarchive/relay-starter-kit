@@ -37,6 +37,7 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  toggleWidgetEnable
 } from './database';
 
 /**
