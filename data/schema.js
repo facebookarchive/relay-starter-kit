@@ -95,6 +95,11 @@ var widgetType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The name of the widget',
     },
+    // Something to mutate
+    enabled: {
+      type: GraphQLBoolean,
+      description: 'On/off toggle'
+    }
   }),
   interfaces: [nodeInterface],
 });
@@ -121,6 +126,25 @@ var queryType = new GraphQLObjectType({
   }),
 });
 
+var ToggleWidgetEnableMutation = mutationWithClientMutationId({
+  name: 'ToggleWidgetEnable',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) }
+  },
+  outputFields: {
+    widget: {
+      type: widgetType,
+      resolve: ({localWidgetId}) => getWidget(localPostId)
+    }
+  },
+  mutateAndGetPayload: ({id}) => {
+    var localWidgetId = fromGlobalId(id).id;
+    // Update database
+    toggleWidgetEnable(localWidgetId);
+    return {localWidgetId};
+  }
+});
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -129,6 +153,7 @@ var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     // Add your own mutations here
+    toggleWidgetEnable: ToggleWidgetEnableMutation
   })
 });
 
@@ -138,6 +163,5 @@ var mutationType = new GraphQLObjectType({
  */
 export var Schema = new GraphQLSchema({
   query: queryType,
-  // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  mutation: mutationType
 });
