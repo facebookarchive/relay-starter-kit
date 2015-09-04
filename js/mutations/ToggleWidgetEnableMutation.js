@@ -2,7 +2,7 @@
 
 export default class ToggleWidgetEnableMutation extends Relay.Mutation {
   static fragments = {
-    post: () => Relay.QL`
+    widget: () => Relay.QL`
       fragment on Widget {
         id,
         enabled
@@ -11,7 +11,7 @@ export default class ToggleWidgetEnableMutation extends Relay.Mutation {
   };
 
   getMutation() {
-    return Relay.QL`mutation{ToggleWidgetEnable}`;
+    return Relay.QL`mutation{toggleWidgetEnable}`;
   }
 
   getFatQuery() {
@@ -28,7 +28,7 @@ export default class ToggleWidgetEnableMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        post: this.props.widget.id,
+        widget: this.props.widget.id,
       },
     }];
   }
@@ -41,9 +41,9 @@ export default class ToggleWidgetEnableMutation extends Relay.Mutation {
 
   getOptimisticResponse() {
     return {
-      post: {
+      widget: {
         id: this.props.widget.id,
-        kudosCount: !this.props.widget.enabled
+        enabled: !this.props.widget.enabled
       }
     };
   }

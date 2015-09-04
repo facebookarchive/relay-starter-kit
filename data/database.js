@@ -37,6 +37,7 @@ module.exports = {
   toggleWidgetEnable: (id) => {
     var localWidget = widgets.find(w => w.id === id);
     localWidget.enabled = !localWidget.enabled;
+    return localWidget;
   },
   User,
   Widget,

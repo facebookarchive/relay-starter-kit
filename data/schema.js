@@ -135,7 +135,7 @@ var ToggleWidgetEnableMutation = mutationWithClientMutationId({
   outputFields: {
     widget: {
       type: widgetType,
-      resolve: ({localWidgetId}) => getWidget(localPostId)
+      resolve: ({localWidgetId}) => getWidget(localWidgetId)
     }
   },
   mutateAndGetPayload: ({id}) => {
