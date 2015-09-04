@@ -4,9 +4,9 @@ import 'babel/polyfill';
 import ToggleWidgetEnableMutation from '../mutations/ToggleWidgetEnableMutation';
 
 class App extends React.Component {
-  _handleToggleEnabled = () => {
+  _handleToggleEnabled = (i) => {
     Relay.Store.update(new ToggleWidgetEnableMutation({
-      widget: this.props.viewer.widgets.edges[0].node
+      widget: this.props.viewer.widgets.edges[i].node
     }));
   }
   
@@ -15,10 +15,10 @@ class App extends React.Component {
       <div>
         <h1>Widget list</h1>
         <ul>
-          {this.props.viewer.widgets.edges.map(edge =>
+          {this.props.viewer.widgets.edges.map((edge, i) =>
             <li>
               {edge.node.name} (ID: {edge.node.id}) Enabled: {edge.node.enabled ? <span>TRUE</span> : <span>FALSE</span>}
-              <button onClick={this._handleToggleEnabled}>
+              <button onClick={this._handleToggleEnabled.bind(null, i)} id={'button' + i}>
                 Toggle on/off
               </button>
             </li>
