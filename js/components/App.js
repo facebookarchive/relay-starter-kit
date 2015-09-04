@@ -6,7 +6,7 @@ import ToggleWidgetEnableMutation from '../mutations/ToggleWidgetEnableMutation'
 class App extends React.Component {
   _handleToggleEnabled(widget) {
     Relay.Store.update(new ToggleWidgetEnableMutation({
-      widget: widget,
+      widget
     }));
   }
   
@@ -18,7 +18,7 @@ class App extends React.Component {
           {this.props.viewer.widgets.edges.map(edge =>
             <li>
               {edge.node.name} (ID: {edge.node.id}) Enabled: {edge.node.enabled ? <span>TRUE</span> : <span>FALSE</span>}
-              <button onClick={this._handleToggleEnabled.bind(null, edge.node)} >
+              <button onClick={this._handleToggleEnabled.bind(this, edge.node)} >
                 Toggle on/off
               </button>
             </li>
