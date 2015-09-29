@@ -37,14 +37,6 @@ var app = new WebpackDevServer(compiler, {
 });
 // Serve static resources
 app.use('/', express.static(path.resolve(__dirname, 'public')));
-app.use(
-  '/react',
-  express.static(path.resolve(__dirname, 'node_modules/react/dist'))
-);
-app.use(
-  '/relay',
-  express.static(path.resolve(__dirname, 'node_modules/react-relay/dist'))
-);
 app.listen(APP_PORT, () => {
   console.log(`App is now running on http://localhost:${APP_PORT}`);
 });
