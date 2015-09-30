@@ -21,9 +21,10 @@ var compiler = webpack({
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        exclude: /node_modules/,
         loader: 'babel',
-        query: {stage: 0, plugins: ['./build/babelRelayPlugin']}
+        query: {stage: 0, plugins: ['./build/babelRelayPlugin']},
+        test: /\.js$/,
       }
     ]
   },
@@ -36,9 +37,7 @@ var app = new WebpackDevServer(compiler, {
   stats: {colors: true}
 });
 // Serve static resources
-app.use('/', express.static('public'));
-app.use('/node_modules/react', express.static('node_modules/react'));
-app.use('/node_modules/react-relay', express.static('node_modules/react-relay'));
+app.use('/', express.static(path.resolve(__dirname, 'public')));
 app.listen(APP_PORT, () => {
   console.log(`App is now running on http://localhost:${APP_PORT}`);
 });
