@@ -8,7 +8,7 @@ class App extends React.Component {
         <h1>Widget list</h1>
         <ul>
           {this.props.viewer.widgets.edges.map(edge =>
-            <li>{edge.node.name} (ID: {edge.node.id})</li>
+            <li key={edge.node.id}>{edge.node.name} (ID: {edge.node.id})</li>
           )}
         </ul>
       </div>
