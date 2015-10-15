@@ -18,8 +18,8 @@
     "graphql": "0.4.2",
     "graphql-relay": "0.3.2",
     "react": "^0.14.0",
-    "react-dom": "^0.14.0-rc",
-    "react-relay": "^0.3.1",
+    "react-dom": "^0.14.0",
+    "react-relay": "^0.4.0",
     "webpack": "^1.10.5",
     "webpack-dev-server": "^1.10.1"
   }
