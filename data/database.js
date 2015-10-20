@@ -19,6 +19,10 @@ var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
   var widget = new Widget();
   widget.name = name;
   widget.id = `${i}`;
+
+  // Something to mutate
+  widget.enabled = true;
+
   return widget;
 });
 
@@ -28,6 +32,13 @@ module.exports = {
   getViewer: () => viewer,
   getWidget: (id) => widgets.find(w => w.id === id),
   getWidgets: () => widgets,
+
+  // Persisting mutation result in our database
+  toggleWidgetEnable: (id) => {
+    var localWidget = widgets.find(w => w.id === id);
+    localWidget.enabled = !localWidget.enabled;
+    return localWidget;
+  },
   User,
   Widget,
 };
