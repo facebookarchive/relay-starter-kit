@@ -29,7 +29,6 @@ var compiler = webpack({
         loader: 'babel',
         query: {
           plugins: ['./build/babelRelayPlugin'],
-          presets: ['es2015', 'stage-0','react'],
         },
         test: /\.js$/,
       }
