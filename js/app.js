@@ -1,4 +1,4 @@
-import 'babel/polyfill';
+import 'babel-polyfill';
 
 import App from './components/App';
 import AppHomeRoute from './routes/AppHomeRoute';
