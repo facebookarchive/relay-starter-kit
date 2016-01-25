@@ -1,4 +1,13 @@
 {
-  "presets": ["es2015", "stage-0", "react"]
+  "passPerPreset": true,
+  "presets": [
+    {
+      "plugins": [
+        "./build/babelRelayPlugin"
+      ]
+    },
+    "react",
+    "es2015",
+    "stage-0"
+  ]
 }
-
