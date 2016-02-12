@@ -8,8 +8,8 @@
  */
 
 // Model types
-class User extends Object {}
-class Widget extends Object {}
+class User {}
+class Widget {}
 
 // Mock data
 var viewer = new User();
