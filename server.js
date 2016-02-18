@@ -1,45 +1,23 @@
-import chokidar from 'chokidar';
 import express from 'express';
 import graphQLHTTP from 'express-graphql';
 import path from 'path';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
+import {Schema} from './data/schema';
 
 const APP_PORT = 3000;
 const GRAPHQL_PORT = 8080;
 
 // Expose a GraphQL endpoint
-let graphQLServer;
-function createGraphQLServer(callback) {
-  if (graphQLServer) {
-    graphQLServer.close();
-    delete require.cache[path.resolve('./data/database.js')];
-    delete require.cache[path.resolve('./data/schema.js')];
-  }
-  const {Schema} = require('./data/schema');
-  const graphQLApp = express();
-  graphQLApp.use('/', graphQLHTTP({
-    graphiql: true,
-    pretty: true,
-    schema: Schema,
-  }));
-  graphQLServer = graphQLApp.listen(GRAPHQL_PORT, () => {
-    console.log(
-      `GraphQL server is now running on http://localhost:${GRAPHQL_PORT}`
-    );
-    if (callback) {
-      callback();
-    }
-  });
-}
-const watcher = chokidar.watch('./data/{database,schema}.js');
-watcher.on('change', path => {
-  console.log(`\`${path}\` changed. Restarting the GraphQL server.`);
-  createGraphQLServer(() =>
-    console.log('Restart your browser to use the updated schema.')
-  );
-});
-createGraphQLServer();
+var graphQLServer = express();
+graphQLServer.use('/', graphQLHTTP({
+  graphiql: true,
+  pretty: true,
+  schema: Schema,
+}));
+graphQLServer.listen(GRAPHQL_PORT, () => console.log(
+  `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`
+));
 
 // Serve the Relay app
 var compiler = webpack({
