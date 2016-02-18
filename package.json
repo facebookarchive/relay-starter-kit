@@ -16,6 +16,7 @@
     "babel-preset-react": "6.5.0",
     "babel-preset-stage-0": "6.5.0",
     "babel-relay-plugin": "0.7.0",
+    "chokidar": "1.4.2",
     "classnames": "2.2.3",
     "express": "4.13.4",
     "express-graphql": "0.4.9",
