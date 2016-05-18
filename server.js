@@ -67,8 +67,7 @@ function startGraphQLServer(callback) {
 function startServers(callback) {
   // Shut down the servers
   if (appServer) {
-    // FIXME: This doesn't seem to free the APP_PORT
-    appServer.close();
+    appServer.listeningApp.close();
   }
   if (graphQLServer) {
     graphQLServer.close();
@@ -80,7 +79,7 @@ function startServers(callback) {
     let doneTasks = 0;
     function handleTaskDone() {
       doneTasks++;
-      if (doneTasks === 2) {
+      if (doneTasks === 2 && callback) {
         callback();
       }
     }
