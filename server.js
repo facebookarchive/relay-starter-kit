@@ -26,7 +26,7 @@ function startAppServer(callback) {
         }
       ]
     },
-    output: {filename: 'app.js', path: '/'}
+    output: {filename: '/app.js', path: '/', publicPath: '/js/'}
   });
   appServer = new WebpackDevServer(compiler, {
     contentBase: '/public/',
