@@ -28,6 +28,12 @@ module.exports = {
   getViewer: () => viewer,
   getWidget: (id) => widgets.find(w => w.id === id),
   getWidgets: () => widgets,
+  addWidget: (newWidget) => {
+    const widget = new Widget();
+    widget.id =  1 + Number(widgets[widgets.length-1].id);
+    widgets.push(Object.assign(widget, newWidget));
+    return widget;
+  },
   User,
   Widget,
 };
