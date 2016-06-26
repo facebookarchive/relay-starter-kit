@@ -26,13 +26,24 @@ function startAppServer(callback) {
         }
       ]
     },
-    output: {filename: 'app.js', path: '/'}
+    output: {filename: '/app.js', path: '/', publicPath: '/js/'}
   });
   appServer = new WebpackDevServer(compiler, {
     contentBase: '/public/',
     proxy: {'/graphql': `http://localhost:${GRAPHQL_PORT}`},
     publicPath: '/js/',
-    stats: {colors: true}
+    quiet: false,
+    noInfo: false,
+    stats: {
+      // Config for minimal console.log mess.
+      assets: false,
+      colors: true,
+      version: false,
+      hash: false,
+      timings: false,
+      chunks: false,
+      chunkModules: false
+    }
   });
   // Serve static resources
   appServer.use('/', express.static(path.resolve(__dirname, 'public')));
