@@ -37,6 +37,7 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  addWidget,
 } from './database';
 
 /**
@@ -125,10 +126,35 @@ var queryType = new GraphQLObjectType({
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
  */
+
+const AddWidgetMutation = mutationWithClientMutationId({
+  name: 'AddWidget',
+  inputFields: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    viewer: {
+      type: userType,
+      resolve: getViewer,
+    },
+    widgets: {
+      type: widgetConnection,
+      description: 'A person\'s collection of widgets',
+      args: connectionArgs,
+      resolve: (_, args) => connectionFromArray(getWidgets(), args),
+    },
+  },
+  mutateAndGetPayload: (payload) => {
+    const widgetId = addWidget(payload).id;
+    return { widgetId };
+  },
+});
+
+
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    // Add your own mutations here
+    addWidget: AddWidgetMutation,
   })
 });
 
@@ -138,6 +164,5 @@ var mutationType = new GraphQLObjectType({
  */
 export var Schema = new GraphQLSchema({
   query: queryType,
-  // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  mutation: mutationType
 });
