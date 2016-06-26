@@ -1,7 +1,14 @@
 import React from 'react';
 import Relay from 'react-relay';
-
+import AddWidgetMutation from '../mutations/AddWidgetMutation';
 class App extends React.Component {
+  onNewWidgetSave(event) {
+    const { relay, viewer } = this.props;
+    relay.commitUpdate(
+      new AddWidgetMutation({ viewer, name: event.target.value })
+    );
+  };
+
   render() {
     return (
       <div>
@@ -11,6 +18,8 @@ class App extends React.Component {
             <li key={edge.node.id}>{edge.node.name} (ID: {edge.node.id})</li>
           )}
         </ul>
+
+        <input type="text" onChange={::this.onNewWidgetSave}/>
       </div>
     );
   }
@@ -20,7 +29,7 @@ export default Relay.createContainer(App, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
-        widgets(first: 10) {
+        widgets(last: 10) {
           edges {
             node {
               id,
@@ -28,6 +37,7 @@ export default Relay.createContainer(App, {
             },
           },
         },
+         ${AddWidgetMutation.getFragment('viewer')}
       }
     `,
   },
