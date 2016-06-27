@@ -65,6 +65,7 @@ export default class AddWidgetMutation extends Relay.Mutation {
       widgets: {
         node: {
           body,
+          viewerId
         },
       },
     };
