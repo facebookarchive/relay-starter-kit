@@ -11,14 +11,13 @@ class App extends React.Component {
   widgetAdd(event) {
     const { relay, viewer } = this.props;
     relay.commitUpdate(new AddWidgetMutation({ viewer, viewerId:viewer.id, body: event.target.value }));
-    event.target.value = '';
+    event.target.value = null;
   };
   
   widgetUpdate(widget, event) {
     const { relay } = this.props;
     relay.commitUpdate(new UpdateWidgetMutation({ widget, body: event.target.value }));
     this.props.updateState({ activeWidgetId: null });
-    event.target.value = '';
   };
 
   render() {

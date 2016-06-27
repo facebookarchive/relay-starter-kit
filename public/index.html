@@ -3,6 +3,87 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">
+    <style>
+      .rsk-app {
+        display: flex;
+        flex-direction: column;
+        word-break: break-all;
+      }
+
+      .rsk-app > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .rsk-widget-counter {
+        flex: 1 10vh;
+        padding: 0 15px;
+      }
+
+      .rsk-widget-list {
+        overflow-y: auto;
+        flex: 1 80vh;
+      }
+
+      .rsk-widget-list > ul {
+        list-style-type: none;
+        padding: 0 15px;
+      }
+      .rsk-widget-list li > .timestamp-edited {
+        text-align: right;
+      }
+
+      .rsk-widget-list li > .timestamp-original {
+        text-align: right;
+      }
+
+      .rsk-widget-form {
+        flex: 1 10vh;
+        padding: 0 15px;
+      }
+
+      .rsk-widget-form textarea {
+        padding: 15px 0;
+        height: 10vh;
+        border: none;
+        width: inherit;
+        overflow: hidden;
+        resize: none;
+      }
+
+      .rsk-widget-form textarea:focus {
+        outline: none;
+      }
+
+      .rsk-widget {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .rsk-widget > div {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .rsk-widget > .widget-avatar {
+        flex: 1 20%;
+      }
+
+      .rsk-widget > .widget-body {
+        flex: 1 50%;
+      }
+
+      .rsk-widget > .btn-edit {
+        flex: 1 15%;
+      }
+
+      .rsk-widget > .btn-delete {
+        flex: 1 15%;
+      }
+    </style>
     <title>Relay • Starter Kit</title>
   </head>
   <body>
