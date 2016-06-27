@@ -160,7 +160,7 @@ const AddWidgetMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: (payload) => {
-    const widgetId = addWidget(payload.viewerId, payload.body).id;
+    const widgetId = addWidget(fromGlobalId(payload.viewerId).id, payload.body).id;
     return { widgetId };
   },
 });
