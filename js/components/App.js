@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import AddWidgetMutation from '../mutations/AddWidgetMutation';
 import UpdateWidgetMutation from '../mutations/UpdateWidgetMutation';
+import AppState from './AppState';
 
 class App extends React.Component {
   widgetSave(event) {
@@ -68,7 +69,7 @@ class App extends React.Component {
   }
 }
 
-export default Relay.createContainer(App, {
+export default Relay.createContainer(AppState(App), {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
