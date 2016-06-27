@@ -61,9 +61,6 @@ export default class AddWidgetMutation extends Relay.Mutation {
       viewer: {
         id: viewer.id,
       },
-
-      // FIXME: numWidgets gets updated optimistically, but this edge does not
-      // get added until the server responds.
       widgets: {
         node: {
           name,
