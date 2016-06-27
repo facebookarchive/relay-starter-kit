@@ -94,10 +94,6 @@ var widgetType = new GraphQLObjectType({
   fields: () => ({
     id: globalIdField('Widget'),
     viewerId: globalIdField('User'),
-    isEditing: {
-      type: GraphQLBoolean,
-      description: 'if field is currently under user edit',
-    },
     body: {
       type: GraphQLString,
       description: 'the content',
