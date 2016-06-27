@@ -1,9 +1,21 @@
 import React from 'react';
 
 const InputForm = (props) => {
-  const enterKey = 13;
-  const handleAdd = (event) => event.keyCode === enterKey ? props.handleAdd(event) : null;
-  const handleUpdate = (widget, event) => { event.keyCode === enterKey ? props.handleUpdate(widget, event) : null };
+
+  const isEnterKeyUsed = (event) => {
+    const enterKey = 13;
+    if (event.keyCode === enterKey ) {
+      event.preventDefault();
+      if (!event.target.value) {
+        props.updateState({activeWidgetId: 0});
+        return;
+      }
+      return true;
+    }
+  };
+
+  const handleAdd = (event) => isEnterKeyUsed(event) ? props.handleAdd(event) : null;
+  const handleUpdate = (widget, event) => { isEnterKeyUsed(event) ? props.handleUpdate(widget, event) : null };
 
   return (
     <div className="rsk-widget-form">
