@@ -1,5 +1,6 @@
 import React from 'react';
 
+const WidgetAvatar = (props) => <div className="widget-avatar">A</div>;
 const WidgetBody = (props) => <div className="widget-body">{props.widget.body}</div>;
 const WidgetEditBtn = (props) => <div onClick={props.handleEditBtnClick} className="btn-edit">edit</div>;
 const WidgetDeleteBtn = (props) => <div className="btn-delete">delete</div>;
@@ -15,7 +16,8 @@ const Widget = (props) => {
   
   return (
     <li>
-      <div className="widget-row">
+      <div className="rsk-widget">
+        <WidgetAvatar {...props} />
         <WidgetBody {...props} />
         <WidgetEditBtn handleEditBtnClick={handleEditBtnClick} {...props} />
         <WidgetDeleteBtn  {...props} />
