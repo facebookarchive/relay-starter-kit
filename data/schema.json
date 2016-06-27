@@ -394,8 +394,44 @@
               "deprecationReason": null
             },
             {
-              "name": "name",
-              "description": "The name of the widget",
+              "name": "viewerId",
+              "description": "viewer id",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "body",
+              "description": "the content",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dateCreated",
+              "description": "creationDate",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dateEdited",
+              "description": "lastEditedDate",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -489,7 +525,21 @@
           "fields": null,
           "inputFields": [
             {
-              "name": "name",
+              "name": "viewerId",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "body",
               "description": null,
               "type": {
                 "kind": "NON_NULL",
@@ -634,7 +684,7 @@
               "defaultValue": null
             },
             {
-              "name": "name",
+              "name": "body",
               "description": null,
               "type": {
                 "kind": "NON_NULL",
