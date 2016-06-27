@@ -161,8 +161,6 @@ const UpdateWidgetMutation = mutationWithClientMutationId({
     widget: {
       type: widgetType,
       resolve: ({ widgetId }) => {
-        console.log('widgetId', widgetId);
-        console.log('getWidget',getWidget(widgetId));
         return getWidget(widgetId)
       },
     },
