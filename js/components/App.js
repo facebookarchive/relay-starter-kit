@@ -7,14 +7,17 @@ import WidgetList from './WidgetList';
 import InputForm from './InputForm';
 
 class App extends React.Component {
-  widgetSave(event) {
+  widgetAdd(event) {
     const { relay, viewer } = this.props;
     relay.commitUpdate(new AddWidgetMutation({ viewer, viewerId:viewer.id, body: event.target.value }));
+    event.target.value = '';
   };
-  widgetUpdate(widget) {
-    const { relay, viewer } = this.props;
-    const body = 'pow';
-    relay.commitUpdate(new UpdateWidgetMutation({ widget, body }));
+  
+  widgetUpdate(widget, event) {
+    const { relay } = this.props;
+    relay.commitUpdate(new UpdateWidgetMutation({ widget, body: event.target.value }));
+    this.props.updateState({ activeWidgetId: null });
+    event.target.value = '';
   };
 
   render() {
