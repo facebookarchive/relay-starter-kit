@@ -5,6 +5,7 @@ import UpdateWidgetMutation from '../mutations/UpdateWidgetMutation';
 import AppState from './AppState';
 import WidgetList from './WidgetList';
 import InputForm from './InputForm';
+import WidgetCounter from './WidgetCounter';
 
 class App extends React.Component {
   widgetAdd(event) {
@@ -23,6 +24,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="rsk-app">
+        <WidgetCounter {...this.props} />
         <WidgetList {...this.props} />
         <InputForm {...this.props} handleAdd={::this.widgetAdd}  handleUpdate={::this.widgetUpdate} />
       </div>
@@ -35,7 +37,8 @@ export default Relay.createContainer(AppState(App), {
     viewer: () => Relay.QL`
       fragment on User {
         id,
-        widgets(last: 10) {
+        widgetsCount,
+        widgets(last: 50) {
           edges {
             node {
               id,

@@ -31,6 +31,7 @@ module.exports = {
   getViewer: () => viewer,
   getWidget: (id) => widgets.find(w => w.id === id),
   getWidgets: (user) => widgets.filter(w => w.viewerId === user.id),
+  getWidgetsCount: (user) => widgets.filter(w => w.viewerId === user.id).length,
   addWidget: (viewerId, body) => {
     const widget = new Widget();
     const id = (1 + Number(widgets[widgets.length-1].id)).toString();

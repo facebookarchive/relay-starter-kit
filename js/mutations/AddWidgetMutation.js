@@ -17,9 +17,9 @@ export default class AddWidgetMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on AddWidgetPayload {
         viewer {
-          widgets
-        },
-        widgets
+          widgets,
+          widgetsCount
+        }
       }
     `;
   }
@@ -68,6 +68,7 @@ export default class AddWidgetMutation extends Relay.Mutation {
           viewerId
         },
       },
+      widgetsCount: this.props.viewer.widgetsCount + 1
     };
   }
 }

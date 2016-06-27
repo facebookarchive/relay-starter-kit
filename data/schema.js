@@ -37,6 +37,7 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  getWidgetsCount,
   addWidget,
   updateWidget,
 } from './database';
@@ -83,6 +84,12 @@ var userType = new GraphQLObjectType({
       description: 'A person\'s collection of widgets',
       args: connectionArgs,
       resolve: (_, args) => connectionFromArray(getWidgets(_), args),
+    },
+    widgetsCount: {
+      type: GraphQLInt,
+      description: 'Count on a person\'s collection of widgets',
+      args: connectionArgs,
+      resolve: (_, args) => getWidgetsCount(_),
     },
   }),
   interfaces: [nodeInterface],
