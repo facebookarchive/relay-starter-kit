@@ -4,7 +4,7 @@ export default class AddWidgetMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
       fragment on User {
-        id
+        id,
       }
     `,
   };
@@ -50,20 +50,21 @@ export default class AddWidgetMutation extends Relay.Mutation {
 
   getVariables() {
     return {
-      name: this.props.name,
+      viewerId: this.props.viewer.id,
+      body: this.props.body,
     };
   }
 
   getOptimisticResponse() {
-    const { viewer, name } = this.props;
+    const { viewerId, body } = this.props;
 
     return {
       viewer: {
-        id: viewer.id,
+        id: viewerId,
       },
       widgets: {
         node: {
-          name,
+          body,
         },
       },
     };

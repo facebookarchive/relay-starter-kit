@@ -6,7 +6,7 @@ export default class UpdateWidgetMutation extends Relay.Mutation {
     widget: () => Relay.QL`
       fragment on Widget {
         id,
-        name
+        body
       }
     `,
   };
@@ -35,7 +35,7 @@ export default class UpdateWidgetMutation extends Relay.Mutation {
   getVariables() {
     return {
       id: this.props.widget.id,
-      name: this.props.name,
+      body: this.props.body,
     };
   }
 
@@ -43,7 +43,7 @@ export default class UpdateWidgetMutation extends Relay.Mutation {
     return {
       widget: {
         id: this.props.widget.id,
-        name: this.props.name,
+        body: this.props.body,
       },
     };
   }
