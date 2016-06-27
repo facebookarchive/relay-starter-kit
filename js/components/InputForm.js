@@ -25,16 +25,15 @@ const InputForm = (props) => {
           props.viewer.widgets.edges
             .filter(edge => edge.node.id === props.state.activeWidgetId )
             .map(edge => (
-              <input
+              <textarea
                 defaultValue={edge.node.body}
+                placeholder="Type a message..."
                 key={edge.node.id}
                 onKeyDown={handleUpdate.bind(this, edge.node)}
-                type="text"
-                id="widget"
               />
             ))
           :
-          <input onKeyDown={handleAdd} type="text" id="widget"/>
+          <textarea placeholder="Type a message..." onKeyDown={handleAdd} />
       }
     </div>
   );
