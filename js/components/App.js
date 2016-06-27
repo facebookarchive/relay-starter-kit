@@ -1,55 +1,51 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Widget from './Widget';
 import AddWidgetMutation from '../mutations/AddWidgetMutation';
 import UpdateWidgetMutation from '../mutations/UpdateWidgetMutation';
+import AppState from './AppState';
+import WidgetList from './WidgetList';
+import InputForm from './InputForm';
+import WidgetCounter from './WidgetCounter';
 
 class App extends React.Component {
-  onNewWidgetSave(event) {
+  widgetAdd(event) {
     const { relay, viewer } = this.props;
-    relay.commitUpdate(
-      new AddWidgetMutation({ viewer, name: event.target.value })
-    );
+    relay.commitUpdate(new AddWidgetMutation({ viewer, viewerId:viewer.id, body: event.target.value }));
+    event.target.value = '';
   };
-  onWidgetUpdate(widget) {
-    const { relay, viewer } = this.props;
-    widget.name = 'bam';
-    relay.commitUpdate(
-      new UpdateWidgetMutation({ name: widget.name , viewer, widget })
-    );
+  
+  widgetUpdate(widget, event) {
+    const { relay } = this.props;
+    relay.commitUpdate(new UpdateWidgetMutation({ widget, body: event.target.value }));
+    this.props.updateState({ activeWidgetId: null });
+    event.target.value = '';
   };
 
   render() {
     return (
-      <div>
-        <h1>Widget list</h1>
-        <ul>
-          {this.props.viewer.widgets.edges.map(edge => (
-            <Widget
-              key={edge.node.id}
-              onClick={this.onWidgetUpdate.bind(this, edge.node)}
-              widget={edge.node}
-            />
-          ))}
-        </ul>
-
-        <input type="text" onChange={::this.onNewWidgetSave}/>
+      <div className="rsk-app">
+        <WidgetCounter {...this.props} />
+        <WidgetList {...this.props} />
+        <InputForm {...this.props} handleAdd={::this.widgetAdd}  handleUpdate={::this.widgetUpdate} />
       </div>
     );
   }
 }
 
-export default Relay.createContainer(App, {
+export default Relay.createContainer(AppState(App), {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
-        widgets(last: 10) {
+        id,
+        widgetsCount,
+        widgets(last: 50) {
           edges {
             node {
               id,
-              name,
+              body,
               ${UpdateWidgetMutation.getFragment('widget')},
-
+              dateCreated,
+              dateEdited
             },
           },
         },

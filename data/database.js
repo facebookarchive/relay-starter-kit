@@ -6,6 +6,7 @@
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
+import moment from 'moment';
 
 // Model types
 class User {}
@@ -17,8 +18,10 @@ viewer.id = '1';
 viewer.name = 'Anonymous';
 var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
   var widget = new Widget();
-  widget.name = name;
+  widget.body = name;
   widget.id = `${i}`;
+  widget.viewerId = viewer.id;
+  widget.dateCreated = moment().utc();
   return widget;
 });
 
@@ -27,15 +30,18 @@ module.exports = {
   getUser: (id) => id === viewer.id ? viewer : null,
   getViewer: () => viewer,
   getWidget: (id) => widgets.find(w => w.id === id),
-  getWidgets: () => widgets,
-  addWidget: (payload) => {
+  getWidgets: (user) => widgets.filter(w => w.viewerId === user.id),
+  getWidgetsCount: (user) => widgets.filter(w => w.viewerId === user.id).length,
+  addWidget: (viewerId, body) => {
     const widget = new Widget();
-    widget.id =  (1 + Number(widgets[widgets.length-1].id)).toString();
-    widgets.push(Object.assign(widget, payload));
+    const id = (1 + Number(widgets[widgets.length-1].id)).toString();
+    const dateCreated = moment().utc();
+    widgets.push(Object.assign(widget, { id, dateCreated, viewerId, body}));
     return widget;
   },
-  updateWidget: (id, name) => {
-    return widgets = widgets.map(w => w.id === id ? Object.assign(w, { name }) : w);
+  updateWidget: (widgetId, body) => {
+    const dateEdited = moment().utc();
+    return widgets = widgets.map(w => w.id === widgetId ? Object.assign(w, { body, dateEdited }) : w);
   },
   User,
   Widget,

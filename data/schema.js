@@ -37,6 +37,7 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  getWidgetsCount,
   addWidget,
   updateWidget,
 } from './database';
@@ -82,7 +83,13 @@ var userType = new GraphQLObjectType({
       type: widgetConnection,
       description: 'A person\'s collection of widgets',
       args: connectionArgs,
-      resolve: (_, args) => connectionFromArray(getWidgets(), args),
+      resolve: (_, args) => connectionFromArray(getWidgets(_), args),
+    },
+    widgetsCount: {
+      type: GraphQLInt,
+      description: 'Count on a person\'s collection of widgets',
+      args: connectionArgs,
+      resolve: (_, args) => getWidgetsCount(_),
     },
   }),
   interfaces: [nodeInterface],
@@ -93,9 +100,18 @@ var widgetType = new GraphQLObjectType({
   description: 'A shiny widget',
   fields: () => ({
     id: globalIdField('Widget'),
-    name: {
+    viewerId: globalIdField('User'),
+    body: {
       type: GraphQLString,
-      description: 'The name of the widget',
+      description: 'the content',
+    },
+    dateCreated: {
+      type: GraphQLString,
+      description: 'creationDate',
+    },
+    dateEdited: {
+      type: GraphQLString,
+      description: 'lastEditedDate',
     },
   }),
   interfaces: [nodeInterface],
@@ -131,7 +147,8 @@ var queryType = new GraphQLObjectType({
 const AddWidgetMutation = mutationWithClientMutationId({
   name: 'AddWidget',
   inputFields: {
-    name: { type: new GraphQLNonNull(GraphQLString) },
+    viewerId: { type: new GraphQLNonNull(GraphQLString) },
+    body: { type: new GraphQLNonNull(GraphQLString) },
   },
   outputFields: {
     viewer: {
@@ -146,7 +163,7 @@ const AddWidgetMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: (payload) => {
-    const widgetId = addWidget(payload).id;
+    const widgetId = addWidget(fromGlobalId(payload.viewerId).id, payload.body).id;
     return { widgetId };
   },
 });
@@ -155,7 +172,7 @@ const UpdateWidgetMutation = mutationWithClientMutationId({
   name: 'UpdateWidget',
   inputFields: {
     id: { type: new GraphQLNonNull(GraphQLID) },
-    name: { type: new GraphQLNonNull(GraphQLString) },
+    body: { type: new GraphQLNonNull(GraphQLString) },
   },
   outputFields: {
     widget: {
@@ -165,9 +182,9 @@ const UpdateWidgetMutation = mutationWithClientMutationId({
       },
     },
   },
-  mutateAndGetPayload: ({ id, name }) => {
+  mutateAndGetPayload: ({ id, body }) => {
     const { id: widgetId } = fromGlobalId(id);
-    updateWidget(widgetId, name);
+    updateWidget(widgetId, body);
     return { widgetId };
   },
 });
