@@ -37,7 +37,7 @@ module.exports = {
     const id = new Date().getUTCMilliseconds().toString();
     const dateCreated = moment().utc();
     widgets.push(Object.assign(widget, { id, dateCreated, viewerId, body}));
-    return widget;
+    return { widget };
   },
   updateWidget: (widgetId, body) => {
     const dateEdited = moment().utc();
