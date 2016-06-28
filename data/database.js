@@ -43,6 +43,11 @@ module.exports = {
     const dateEdited = moment().utc();
     return widgets = widgets.map(w => w.id === widgetId ? Object.assign(w, { body, dateEdited }) : w);
   },
+
+  removeWidget: (widgetId) => {
+    const indexToRemove = widgets.indexOf(widgets.filter(w => w.id === widgetId)[0]);
+    return widgets.splice(indexToRemove, 1);
+  },
   User,
   Widget,
 };
