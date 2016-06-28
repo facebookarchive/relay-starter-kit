@@ -5,6 +5,7 @@ export default class AddWidgetMutation extends Relay.Mutation {
     viewer: () => Relay.QL`
       fragment on User {
         id,
+        widgetsCount,
       }
     `,
   };
@@ -19,8 +20,8 @@ export default class AddWidgetMutation extends Relay.Mutation {
         viewer {
           widgets,
           widgetsCount
-        }
-      }
+        },
+      },
     `;
   }
 
@@ -37,12 +38,9 @@ export default class AddWidgetMutation extends Relay.Mutation {
         parentName: 'viewer',
         parentID: this.props.viewer.id,
         connectionName: 'widgetConnection',
-        edgeName: 'widgets',
+        edgeName: 'widgetEdge',
         rangeBehaviors: {
           '': 'append',
-          'status(any)': 'append',
-          'status(active)': 'append',
-          'status(completed)': null,
         },
       },
     ];
@@ -57,18 +55,12 @@ export default class AddWidgetMutation extends Relay.Mutation {
 
   getOptimisticResponse() {
     const { viewerId, body } = this.props;
-
     return {
       viewer: {
         id: viewerId,
+        widgetsCount: this.props.viewer.widgetsCount + 1,
       },
-      widgets: {
-        node: {
-          body,
-          viewerId
-        },
-      },
-      widgetsCount: this.props.viewer.widgetsCount + 1
+      widgetEdge: { node: { body } }, // @@todo find out why this does not work
     };
   }
 }
