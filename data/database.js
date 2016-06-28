@@ -19,7 +19,7 @@ viewer.name = 'Anonymous';
 var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
   var widget = new Widget();
   widget.body = name;
-  widget.id = `${i}`;
+  widget.id = new Date().getUTCMilliseconds() + i.toString();
   widget.viewerId = viewer.id;
   widget.dateCreated = moment().utc();
   return widget;
@@ -34,7 +34,7 @@ module.exports = {
   getWidgetsCount: (user) => widgets.filter(w => w.viewerId === user.id).length,
   addWidget: (viewerId, body) => {
     const widget = new Widget();
-    const id = (1 + Number(widgets[widgets.length-1].id)).toString();
+    const id = new Date().getUTCMilliseconds().toString();
     const dateCreated = moment().utc();
     widgets.push(Object.assign(widget, { id, dateCreated, viewerId, body}));
     return widget;
