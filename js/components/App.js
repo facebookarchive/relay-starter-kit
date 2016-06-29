@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import AddWidgetMutation from '../mutations/AddWidgetMutation';
 import UpdateWidgetMutation from '../mutations/UpdateWidgetMutation';
+import RemoveWidgetMutation from '../mutations/RemoveWidgetMutation';
 import AppState from './AppState';
 import WidgetList from './WidgetList';
 import InputForm from './InputForm';
@@ -19,13 +20,23 @@ class App extends React.Component {
     relay.commitUpdate(new UpdateWidgetMutation({ widget, body: event.target.value }));
     this.props.updateState({ activeWidgetId: null });
   };
+  
+  widgetRemove(widget) {
+    const { relay, viewer } = this.props;
+    relay.commitUpdate(new RemoveWidgetMutation({ viewer, widget }));
+    this.props.updateState({ activeWidgetId: null });
+  };
 
   render() {
     return (
       <div className="rsk-app">
         <WidgetCounter {...this.props} />
-        <WidgetList {...this.props} />
-        <InputForm {...this.props} handleAdd={::this.widgetAdd}  handleUpdate={::this.widgetUpdate} />
+        <WidgetList {...this.props} handleRemove={::this.widgetRemove} />
+        <InputForm 
+          {...this.props} 
+          handleAdd={::this.widgetAdd}
+          handleUpdate={::this.widgetUpdate}
+        />
       </div>
     );
   }
@@ -49,6 +60,7 @@ export default Relay.createContainer(AppState(App), {
           },
         },
         ${AddWidgetMutation.getFragment('viewer')},
+        ${RemoveWidgetMutation.getFragment('viewer')},
       }
     `,
   },

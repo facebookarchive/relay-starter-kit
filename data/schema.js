@@ -40,6 +40,7 @@ import {
   getWidgetsCount,
   addWidget,
   updateWidget,
+  removeWidget,
 } from './database';
 
 /**
@@ -189,12 +190,34 @@ const UpdateWidgetMutation = mutationWithClientMutationId({
   },
 });
 
+const RemoveWidgetMutation = mutationWithClientMutationId({
+  name: 'RemoveWidget',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    viewer: {
+      type: userType,
+      resolve: getViewer,
+    },
+    deletedId: {
+      type: GraphQLID,
+      resolve: ({ id }) => id,
+    },
+  },
+  mutateAndGetPayload: ({ id }) => {
+    const { id: widgetId } = fromGlobalId(id);
+    removeWidget(widgetId);
+    return { id };
+  },
+});
 
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     addWidget: AddWidgetMutation,
     updateWidget: UpdateWidgetMutation,
+    removeWidget: RemoveWidgetMutation,
   })
 });
 
