@@ -11,7 +11,10 @@ import moment from 'moment';
 // Model types
 class User {}
 class Widget {}
-
+const getNewWidgetId = (() => {
+    let id = 1;
+    return () => id += 1;
+})();
 // Mock data
 var viewer = new User();
 viewer.id = '1';
@@ -19,9 +22,9 @@ viewer.name = 'Anonymous';
 var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
   var widget = new Widget();
   widget.body = name;
-  widget.id = new Date().getUTCMilliseconds() + i.toString();
+  widget.id = getNewWidgetId().toString();
   widget.viewerId = viewer.id;
-  widget.dateCreated = moment().utc();
+  widget.dateCreated = moment().format();
   return widget;
 });
 
@@ -34,13 +37,13 @@ module.exports = {
   getWidgetsCount: (user) => widgets.filter(w => w.viewerId === user.id).length,
   addWidget: (viewerId, body) => {
     const widget = new Widget();
-    const id = new Date().getUTCMilliseconds().toString();
-    const dateCreated = moment().utc();
+    const id = getNewWidgetId().toString();
+    const dateCreated = moment().format();
     widgets.push(Object.assign(widget, { id, dateCreated, viewerId, body}));
     return { widget };
   },
   updateWidget: (widgetId, body) => {
-    const dateEdited = moment().utc();
+    const dateEdited = moment().format();
     return widgets = widgets.map(w => w.id === widgetId ? Object.assign(w, { body, dateEdited }) : w);
   },
 
