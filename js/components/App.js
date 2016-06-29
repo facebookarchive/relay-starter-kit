@@ -49,6 +49,7 @@ export default Relay.createContainer(AppState(App), {
         id,
         widgetsCount,
         widgets(last: 50) {
+        name,
           edges {
             node {
               id,

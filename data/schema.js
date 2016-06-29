@@ -92,6 +92,10 @@ var userType = new GraphQLObjectType({
       args: connectionArgs,
       resolve: (_, args) => getWidgetsCount(_),
     },
+    name: {
+      type: GraphQLString,
+      description: 'Name of the user',
+    },
   }),
   interfaces: [nodeInterface],
 });
