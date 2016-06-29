@@ -24,6 +24,7 @@
     "graphql-relay": "0.4.2",
     "moment": "^2.13.0",
     "react": "15.1.0",
+    "react-addons-css-transition-group": "^15.1.0",
     "react-dom": "15.1.0",
     "react-relay": "0.9.1",
     "require-clean": "0.1.3",
