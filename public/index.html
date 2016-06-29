@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <style>
       .rsk-app {
         display: flex;
         flex-direction: column;
-        word-break: break-all;
+        word-break: keep-all;
       }
 
       .rsk-app > div {
         display: flex;
         flex-direction: column;
-        justify-content: center;
       }
 
       .rsk-widget-counter {
@@ -25,19 +25,19 @@
       .rsk-widget-list {
         overflow-y: auto;
         flex: 1 80vh;
+        background-color: #edeef1;
       }
 
       .rsk-widget-list > ul {
         list-style-type: none;
         padding: 0 15px;
+        transition: opacity 120ms ease-out;
       }
-      .rsk-widget-list li > .timestamp-edited {
+
+      .rsk-widget-list li > .timestamp {
         text-align: right;
       }
 
-      .rsk-widget-list li > .timestamp-original {
-        text-align: right;
-      }
 
       .rsk-widget-form {
         flex: 1 10vh;
@@ -60,29 +60,111 @@
       .rsk-widget {
         display: flex;
         flex-direction: row;
+        padding: 15px 0 15px 15px;
       }
 
       .rsk-widget > div {
         display: flex;
         flex-direction: row;
-        justify-content: center;
       }
 
       .rsk-widget > .widget-avatar {
-        flex: 1 20%;
+        flex: 1 32px;
+        justify-content: flex-end;
+        margin-right: 6px;
+      }
+
+      .rsk-widget > .widget-avatar img {
+        height: 32px;
+        border-radius: 3px;
       }
 
       .rsk-widget > .widget-body {
-        flex: 1 50%;
+        flex: 1 100%;
+        overflow: hidden;
+        border-radius: 3px;
+        border: 1px solid gainsboro;
+        background: aliceblue;
+        padding: 6px;
+        justify-content: flex-start;
+        text-shadow: rgba(255, 255, 255, .5) 0 1px 0;
+        white-space: pre-wrap;
       }
 
-      .rsk-widget > .btn-edit {
-        flex: 1 15%;
+      .rsk-widget > .btn {
+        flex: 1 32px;
+        justify-content: center;
+        height: 32px;
+        font-size: 30px;
+        margin: 0 6px;
       }
 
       .rsk-widget > .btn-delete {
-        flex: 1 15%;
+        margin: 0;
       }
+
+      .loading-indicator {
+        position: fixed;
+        top: 25%;
+        font-size: 15em;
+        width: 100%;
+        text-align: center;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .feather {
+        opacity: 0;
+      }
+
+      .fa {
+        cursor: pointer;
+      }
+      .timestamp, .fa {
+        color: gainsboro;
+      }
+
+      .fa:hover {
+        color: silver;
+      }
+
+      .timestamp, .timestamp .fa:hover {
+        font-size: 14px;
+        color: gainsboro;
+        cursor: default;
+      }
+      .timestamp .fa {
+        margin-right: 2px;
+      }
+
+      .expand-enter, .expand-leave {
+        transition: max-height .6s, opacity .6s linear;
+        overflow: hidden;
+      }
+
+      .expand-enter {
+        max-height: 0;
+        opacity: 0;
+      }
+
+      .expand-enter.expand-enter-active {
+        max-height: 999px;
+        opacity: 1;
+      }
+
+      .expand-leave {
+        max-height: 999px;
+        opacity: 1;
+      }
+
+      .expand-leave.expand-leave-active {
+        max-height: 0;
+        opacity: 1;
+      }
+
+
     </style>
     <title>Relay • Starter Kit</title>
   </head>
