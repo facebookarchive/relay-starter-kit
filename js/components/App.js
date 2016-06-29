@@ -27,13 +27,20 @@ class App extends React.Component {
     this.props.updateState({ activeWidgetId: null });
   };
 
+  loadMoreWidgets() {
+    const { relay } = this.props;
+    return new Promise(
+      resolve => relay.setVariables({ limitLast: this.props.relay.variables.limitLast + 10 }, () => resolve())
+    );
+  }
+
   render() {
     return (
       <div className="rsk-app">
         <WidgetCounter {...this.props} />
-        <WidgetList {...this.props} handleRemove={::this.widgetRemove} />
-        <InputForm 
-          {...this.props} 
+        <WidgetList loadMoreWidgets={::this.loadMoreWidgets} {...this.props} handleRemove={::this.widgetRemove} />
+        <InputForm
+          {...this.props}
           handleAdd={::this.widgetAdd}
           handleUpdate={::this.widgetUpdate}
         />
@@ -43,25 +50,29 @@ class App extends React.Component {
 }
 
 export default Relay.createContainer(AppState(App), {
+  initialVariables: {
+    limitLast: 20,
+  },
+
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
         id,
         widgetsCount,
-        widgets(last: 50) {
         name,
+        ${AddWidgetMutation.getFragment('viewer')},
+        ${RemoveWidgetMutation.getFragment('viewer')},
+        widgets(last: $limitLast) {
           edges {
             node {
+              ${UpdateWidgetMutation.getFragment('widget')},
               id,
               body,
-              ${UpdateWidgetMutation.getFragment('widget')},
               dateCreated,
               dateEdited
             },
           },
         },
-        ${AddWidgetMutation.getFragment('viewer')},
-        ${RemoveWidgetMutation.getFragment('viewer')},
       }
     `,
   },
