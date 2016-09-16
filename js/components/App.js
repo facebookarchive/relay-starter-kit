@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
+import Button from 'react-bootstrap/lib/Button'
 
 class App extends React.Component {
   render() {
@@ -11,6 +12,7 @@ class App extends React.Component {
             <li key={edge.node.id}>{edge.node.name} (ID: {edge.node.id})</li>
           )}
         </ul>
+        <Button bsStyle="primary">Primary</Button>
       </div>
     );
   }

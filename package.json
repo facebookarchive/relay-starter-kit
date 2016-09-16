@@ -23,6 +23,7 @@
     "graphql": "0.7.0",
     "graphql-relay": "0.4.3",
     "react": "^15.3.1",
+    "react-bootstrap": "^0.30.3",
     "react-dom": "^15.3.1",
     "react-relay": "0.9.3",
     "require-clean": "0.1.3",
