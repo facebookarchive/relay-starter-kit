@@ -5,10 +5,10 @@ import TablePreview from './table-preview'
 
 export default class MetadataTabs extends React.Component{
   render() {
-    return <Tabs defaultActiveKey={2} id="metadata-tab">
-      <Tab eventKey={1} title="Tab 1"><TablePreview/></Tab>
-      <Tab eventKey={2} title="Tab 2">Tab 2 content</Tab>
-      <Tab eventKey={3} title="Tab 3" disabled>Tab 3 content</Tab>
+    return <Tabs defaultActiveKey={1} id="metadata-tab">
+      <Tab eventKey={1} title="Table Preview"><TablePreview/></Tab>
+      <Tab eventKey={2} title="Metadata">Here is Metadata</Tab>
+      <Tab eventKey={3} title="Data Dictionary">Here is Data Dictionary</Tab>
     </Tabs>
   }
 }
