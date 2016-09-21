@@ -1,6 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import Button from 'react-bootstrap/lib/Button'
+import MetadataTabs from './metadata/metadata-tabs'
 
 class App extends React.Component {
   render() {
@@ -13,6 +14,7 @@ class App extends React.Component {
           )}
         </ul>
         <Button bsStyle="primary">Primary</Button>
+        <MetadataTabs/>
       </div>
     );
   }
