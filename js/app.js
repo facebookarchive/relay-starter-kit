@@ -5,6 +5,7 @@ import AppHomeRoute from './routes/AppHomeRoute';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Relay from 'react-relay';
+import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 ReactDOM.render(
   <Relay.Renderer
