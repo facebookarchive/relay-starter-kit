@@ -1,33 +1,30 @@
-/**
- *  Copyright (c) 2015, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
+// const Relay = require('react-relay')
 
-// Model types
 class User {}
-class Widget {}
+// class Quote {}
+// const quote = new Quote()
 
-// Mock data
-var viewer = new User();
-viewer.id = '1';
-viewer.name = 'Anonymous';
-var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
-  var widget = new Widget();
-  widget.name = name;
-  widget.id = `${i}`;
-  return widget;
-});
+// Mock authenticated ID
+const VIEWER_ID = 'me'
+
+// Mock user data
+const viewer = new User()
+viewer.id = VIEWER_ID
+
+const usersById = {
+    [VIEWER_ID]: viewer,
+}
+
+function getUser(id) {
+    return usersById[id]
+}
+
+function getViewer() {
+    return getUser(VIEWER_ID)
+}
 
 module.exports = {
-  // Export methods that your schema can use to interact with your database
-  getUser: (id) => id === viewer.id ? viewer : null,
-  getViewer: () => viewer,
-  getWidget: (id) => widgets.find(w => w.id === id),
-  getWidgets: () => widgets,
-  User,
-  Widget,
-};
+    User,
+    getUser,
+    getViewer,
+}

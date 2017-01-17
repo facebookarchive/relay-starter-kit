@@ -8,12 +8,7 @@
  */
 
 import {
-  GraphQLBoolean,
-  GraphQLFloat,
-  GraphQLID,
   GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
@@ -22,7 +17,7 @@ import {
 import {
   connectionArgs,
   connectionDefinitions,
-  connectionFromArray,
+  connectionFromPromisedArray,
   fromGlobalId,
   globalIdField,
   mutationWithClientMutationId,
@@ -32,12 +27,11 @@ import {
 import {
   // Import methods that your schema can use to interact with your database
   User,
-  Widget,
   getUser,
   getViewer,
-  getWidget,
-  getWidgets,
 } from './database';
+
+const { ObjectID } = require('mongodb')
 
 /**
  * We get the node interface and field from the Relay library.
@@ -45,65 +39,116 @@ import {
  * The first method defines the way we resolve an ID to its object.
  * The second defines the way we resolve an object to its GraphQL type.
  */
-var {nodeInterface, nodeField} = nodeDefinitions(
-  (globalId) => {
-    var {type, id} = fromGlobalId(globalId);
-    if (type === 'User') {
+
+const globalIdFetcher = (globalId, { db }) => {
+  const { type, id } = fromGlobalId(globalId)
+  switch (type) {
+    case 'User':
       return getUser(id);
-    } else if (type === 'Widget') {
-      return getWidget(id);
-    } else {
-      return null;
-    }
-  },
-  (obj) => {
-    if (obj instanceof User) {
-      return userType;
-    } else if (obj instanceof Widget)  {
-      return widgetType;
-    } else {
-      return null;
-    }
+    case 'Quote':
+      return db.collection('quotes').findOne(ObjectID(id))
+    default:
+      return null
   }
-);
+}
+
+const globalTypeResolver = obj => obj.type || quoteType
+
+const { nodeInterface, nodeField } = nodeDefinitions(
+  globalIdFetcher,
+  globalTypeResolver
+)
+
+// var { nodeInterface, nodeField } = nodeDefinitions(
+//   (globalId) => {
+//     var { type, id } = fromGlobalId(globalId);
+//     if (type === 'User') {
+//       return getUser(id);
+//     } else if (type === 'Widget') {
+//       return getWidget(id);
+//     } else {
+//       return null;
+//     }
+//   },
+//   (obj) => {
+//     if (obj instanceof User) {
+//       return userType;
+//     } else if (obj instanceof Widget)  {
+//       return widgetType;
+//     } else {
+//       return null;
+//     }
+//   }
+// );
 
 /**
  * Define your own types here
  */
 
-var userType = new GraphQLObjectType({
+const quoteType = new GraphQLObjectType({
+  name: 'Quote',
+  fields: () => ({
+    id: globalIdField('Quote', obj => obj._id),
+    text: { type: GraphQLString },
+    author: { type: GraphQLString },
+    likesCount: {
+      type: GraphQLInt,
+      resolve: obj => obj.likesCount || 0,
+    },
+  }),
+  interfaces: [nodeInterface],
+})
+
+let connectionArgsWithSearch = connectionArgs
+
+connectionArgsWithSearch.searchTerm = { type: GraphQLString }
+
+const userType = new GraphQLObjectType({
   name: 'User',
-  description: 'A person who uses our app',
   fields: () => ({
     id: globalIdField('User'),
-    widgets: {
-      type: widgetConnection,
-      description: 'A person\'s collection of widgets',
-      args: connectionArgs,
-      resolve: (_, args) => connectionFromArray(getWidgets(), args),
+    quotes: {
+      type: QuotesConnectionType,
+      description: 'A list of the quotes in the database',
+      args: connectionArgsWithSearch,
+      resolve: (_, args, { db }) => {
+        let findParams = {}
+        if (args.searchTerm) {
+          findParams.text = new RegExp(args.searchTerm, 'i')
+        }
+        return connectionFromPromisedArray(
+          db.collection('quotes').find(findParams).toArray(),
+          args
+        )
+      },
     },
   }),
   interfaces: [nodeInterface],
 });
 
-var widgetType = new GraphQLObjectType({
-  name: 'Widget',
-  description: 'A shiny widget',
-  fields: () => ({
-    id: globalIdField('Widget'),
-    name: {
-      type: GraphQLString,
-      description: 'The name of the widget',
-    },
-  }),
-  interfaces: [nodeInterface],
-});
+// var userType = new GraphQLObjectType({
+//   name: 'User',
+//   description: 'A person who uses our app',
+//   fields: () => ({
+//     id: globalIdField('User'),
+//     widgets: {
+//       type: widgetConnection,
+//       description: 'A person\'s collection of widgets',
+//       args: connectionArgs,
+//       resolve: (_, args) => connectionFromArray(getWidgets(), args),
+//     },
+//   }),
+//   interfaces: [nodeInterface],
+// });
+
 
 /**
  * Define your own connection types here
  */
-var {connectionType: widgetConnection} =
-  connectionDefinitions({name: 'Widget', nodeType: widgetType});
+const { connectionType: QuotesConnectionType } = connectionDefinitions({
+  name: 'Quote',
+  nodeType: quoteType,
+})
 
 /**
  * This is the type that will be the root of our query,
@@ -125,19 +170,41 @@ var queryType = new GraphQLObjectType({
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
  */
-var mutationType = new GraphQLObjectType({
-  name: 'Mutation',
+const thumbsUpMutation = mutationWithClientMutationId({
+  name: 'ThumbsUpMutation',
+  inputFields: {
+    quoteId: { type: GraphQLString },
+  },
+  outputFields: {
+    quote: {
+      type: quoteType,
+      resolve: obj => obj,
+    },
+  },
+  mutateAndGetPayload: (params, { db }) => {
+    const { id } = fromGlobalId(params.quoteId)
+    return Promise.resolve(
+      db.collection('quotes').updateOne({ _id: ObjectID(id) },
+        { $inc: { likesCount: 1 } }
+      )
+    ).then(result =>
+    db.collection('quotes').findOne(ObjectID(id)))
+  },
+})
+
+const mutationType = new GraphQLObjectType({
+  name: 'RootMutation',
   fields: () => ({
-    // Add your own mutations here
-  })
-});
+    thumbsUp: thumbsUpMutation,
+  }),
+})
 
 /**
  * Finally, we construct our schema (whose starting query type is the query
  * type we defined above) and export it.
  */
-export var Schema = new GraphQLSchema({
+export const Schema = new GraphQLSchema({
   query: queryType,
   // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  mutation: mutationType,
 });
