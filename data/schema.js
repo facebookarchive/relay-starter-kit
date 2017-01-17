@@ -59,28 +59,6 @@ const { nodeInterface, nodeField } = nodeDefinitions(
   globalTypeResolver
 )
 
-// var { nodeInterface, nodeField } = nodeDefinitions(
-//   (globalId) => {
-//     var { type, id } = fromGlobalId(globalId);
-//     if (type === 'User') {
-//       return getUser(id);
-//     } else if (type === 'Widget') {
-//       return getWidget(id);
-//     } else {
-//       return null;
-//     }
-//   },
-//   (obj) => {
-//     if (obj instanceof User) {
-//       return userType;
-//     } else if (obj instanceof Widget)  {
-//       return widgetType;
-//     } else {
-//       return null;
-//     }
-//   }
-// );
-
 /**
  * Define your own types here
  */
@@ -125,22 +103,6 @@ const userType = new GraphQLObjectType({
   }),
   interfaces: [nodeInterface],
 });
-
-// var userType = new GraphQLObjectType({
-//   name: 'User',
-//   description: 'A person who uses our app',
-//   fields: () => ({
-//     id: globalIdField('User'),
-//     widgets: {
-//       type: widgetConnection,
-//       description: 'A person\'s collection of widgets',
-//       args: connectionArgs,
-//       resolve: (_, args) => connectionFromArray(getWidgets(), args),
-//     },
-//   }),
-//   interfaces: [nodeInterface],
-// });
-
 
 /**
  * Define your own connection types here
