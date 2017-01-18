@@ -14,6 +14,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(JSON.stringify(this.props, null, 4))
     return (
       <div className="quotes-library">
         <SearchForm searchAction={this.search} />
