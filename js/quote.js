@@ -54,6 +54,7 @@ Quote = Relay.createContainer(Quote, {
     quote: () => Relay.QL `
         fragment OneQuote on Quote {
             ${ThumbsUpMutation.getFragment('quote')}
+            id
             text
             author
             likesCount @include(if: $showLikes)

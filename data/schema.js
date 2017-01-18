@@ -52,8 +52,17 @@ const globalIdFetcher = (globalId, { db }) => {
   }
 }
 
-const globalTypeResolver = obj => obj.type || quoteType
+// const globalTypeResolver = obj => obj.type || quoteType
 
+const globalTypeResolver = obj => {
+    if (obj instanceof User) {
+      return userType;
+    } else if (obj instanceof Quote)  {
+      return quoteType;
+    } else {
+      return null;
+    }
+  }
 const { nodeInterface, nodeField } = nodeDefinitions(
   globalIdFetcher,
   globalTypeResolver
@@ -74,17 +83,25 @@ const quoteType = new GraphQLObjectType({
       resolve: obj => obj.likesCount || 0,
     },
   }),
-  interfaces: [nodeInterface],
+  interfaces: () => [nodeInterface],
 })
 
 let connectionArgsWithSearch = connectionArgs
 
 connectionArgsWithSearch.searchTerm = { type: GraphQLString }
 
+/**
+ * Define your own connection types here
+ */
+const { connectionType: QuotesConnectionType } = connectionDefinitions({
+  name: 'Quote',
+  nodeType: quoteType,
+})
+
 const userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: globalIdField('User'),
+    id: globalIdField('User', obj => obj._id),
     quotes: {
       type: QuotesConnectionType,
       description: 'A list of the quotes in the database',
@@ -101,16 +118,8 @@ const userType = new GraphQLObjectType({
       },
     },
   }),
-  interfaces: [nodeInterface],
+  interfaces: () => [nodeInterface],
 });
-
-/**
- * Define your own connection types here
- */
-const { connectionType: QuotesConnectionType } = connectionDefinitions({
-  name: 'Quote',
-  nodeType: quoteType,
-})
 
 /**
  * This is the type that will be the root of our query,
