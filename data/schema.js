@@ -37,6 +37,8 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  getPerson,
+  getPeople,
 } from './database';
 
 /**
@@ -52,6 +54,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return getUser(id);
     } else if (type === 'Widget') {
       return getWidget(id);
+    } else if (type === 'Person') {
+      return getPerson(id);
     } else {
       return null;
     }
@@ -61,6 +65,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return userType;
     } else if (obj instanceof Widget)  {
       return widgetType;
+    } else if (obj instanceof Person)  {
+      return personType;
     } else {
       return null;
     }
@@ -71,6 +77,23 @@ var {nodeInterface, nodeField} = nodeDefinitions(
  * Define your own types here
  */
 
+var personType = new GraphQLObjectType({
+  name: 'Person',
+  description: 'A Person',
+  fields: () => ({
+    id: globalIdField('User'),
+    firstName: {
+      type: GraphQLString,
+      description: 'A Person\'s firstName',
+    },
+    lastName: {
+      type: GraphQLString,
+      description: 'A Person\'s lastName',
+    },
+  }),
+  interfaces: [nodeInterface],
+});
+
 var userType = new GraphQLObjectType({
   name: 'User',
   description: 'A person who uses our app',
@@ -80,7 +103,6 @@ var userType = new GraphQLObjectType({
       type: widgetConnection,
       description: 'A person\'s collection of widgets',
       args: connectionArgs,
-      resolve: (_, args) => connectionFromArray(getWidgets(), args),
     },
   }),
   interfaces: [nodeInterface],
@@ -118,6 +140,20 @@ var queryType = new GraphQLObjectType({
       type: userType,
       resolve: () => getViewer(),
     },
+    person: {
+      type: personType,
+      args: {
+        id: {
+          name: 'id',
+          type: new GraphQLNonNull(GraphQLID),
+        },
+      },
+      resolve: (_, args) => getPerson(args.id),
+    },
+    people: {
+      type: new GraphQLList(personType),
+      resolve: (_, args) => getPeople(),
+    }
   }),
 });
 

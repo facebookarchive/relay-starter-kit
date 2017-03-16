@@ -6,10 +6,12 @@
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
+ import { people, meets, events, locations } from './fakedata.json';
 
 // Model types
 class User {}
 class Widget {}
+class Person {}
 
 // Mock data
 var viewer = new User();
@@ -22,6 +24,8 @@ var widgets = ['What\'s-it', 'Who\'s-it', 'How\'s-it'].map((name, i) => {
   return widget;
 });
 
+
+
 module.exports = {
   // Export methods that your schema can use to interact with your database
   getUser: (id) => id === viewer.id ? viewer : null,
@@ -30,4 +34,6 @@ module.exports = {
   getWidgets: () => widgets,
   User,
   Widget,
+  getPerson: (id) => people[id],
+  getPeople: () => people,
 };

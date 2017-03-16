@@ -7,8 +7,8 @@ import WebpackDevServer from 'webpack-dev-server';
 import {clean} from 'require-clean';
 import {exec} from 'child_process';
 
-const APP_PORT = 3000;
-const GRAPHQL_PORT = 8080;
+const APP_PORT = 6002;
+const GRAPHQL_PORT = 6001;
 
 let graphQLServer;
 let appServer;
