@@ -37,6 +37,7 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  Person,
   getPerson,
   getPeople,
 } from './database';
@@ -81,7 +82,7 @@ var personType = new GraphQLObjectType({
   name: 'Person',
   description: 'A Person',
   fields: () => ({
-    id: globalIdField('User'),
+    id: globalIdField('Person'),
     firstName: {
       type: GraphQLString,
       description: 'A Person\'s firstName',
@@ -104,6 +105,27 @@ var userType = new GraphQLObjectType({
       description: 'A person\'s collection of widgets',
       args: connectionArgs,
     },
+    person: {
+      type: personType,
+      args: {
+        id: {
+          name: 'id',
+          type: new GraphQLNonNull(GraphQLID),
+        },
+      },
+      resolve: (_, args) => getPerson(args.id),
+    },
+    people: {
+      type: personConnection,
+      description: 'The people this server knows about',
+      args: connectionArgs,
+      resolve: (collection, args) => {
+        return connectionFromArray(
+          getPeople().map(p => new Person(p)),
+          args
+        );
+    },
+    }
   }),
   interfaces: [nodeInterface],
 });
@@ -124,8 +146,11 @@ var widgetType = new GraphQLObjectType({
 /**
  * Define your own connection types here
  */
-var {connectionType: widgetConnection} =
-  connectionDefinitions({name: 'Widget', nodeType: widgetType});
+ var {connectionType: widgetConnection} =
+   connectionDefinitions({name: 'Widget', nodeType: widgetType});
+
+ var {connectionType: personConnection} =
+   connectionDefinitions({name: 'Person', nodeType: personType});
 
 /**
  * This is the type that will be the root of our query,
@@ -140,20 +165,6 @@ var queryType = new GraphQLObjectType({
       type: userType,
       resolve: () => getViewer(),
     },
-    person: {
-      type: personType,
-      args: {
-        id: {
-          name: 'id',
-          type: new GraphQLNonNull(GraphQLID),
-        },
-      },
-      resolve: (_, args) => getPerson(args.id),
-    },
-    people: {
-      type: new GraphQLList(personType),
-      resolve: (_, args) => getPeople(),
-    }
   }),
 });
 

@@ -11,7 +11,11 @@
 // Model types
 class User {}
 class Widget {}
-class Person {}
+class Person {
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+}
 
 // Mock data
 var viewer = new User();
@@ -34,6 +38,7 @@ module.exports = {
   getWidgets: () => widgets,
   User,
   Widget,
-  getPerson: (id) => people[id],
-  getPeople: () => people,
+  getPerson: id => new Person(people.find(person => person.id === id)),
+  getPeople: () => people.map(person => new Person(person)),
+  Person,
 };
