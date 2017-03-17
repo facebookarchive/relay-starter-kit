@@ -49,5 +49,10 @@ module.exports = {
     people.push(pers);
     return pers;
   },
+  makeFriends: (id, friends) => {
+    let pers = people[0];
+    pers.friends = friends;
+    return pers;
+  },
   Person,
 };

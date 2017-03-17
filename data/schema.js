@@ -42,6 +42,7 @@ import {
   getPerson,
   getPeople,
   addPerson,
+  makeFriends
 } from './database';
 
 /**
@@ -93,6 +94,10 @@ var personType = new GraphQLObjectType({
       type: GraphQLString,
       description: 'A Person\'s lastName',
     },
+    friends: {
+      type: new GraphQLList(GraphQLString),
+      description: 'A Person\'s friends'
+    }
   }),
   interfaces: [nodeInterface],
 });
@@ -187,7 +192,24 @@ var createPersonPayload = new GraphQLObjectType({
   }
 });
 
-
+var updateFriendsMutation = new mutationWithClientMutationId({
+  name: 'UpdateFriendsPayload',
+  inputFields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID)
+    },
+    friends: {
+      type: new GraphQLList(GraphQLString)
+    }
+  },
+  outputFields: {
+    person: {
+      type: personType,
+      resolve: (payload) => payload
+    }
+  },
+  mutateAndGetPayload: ({id, friends}) => makeFriends(id, friends)
+})
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -196,6 +218,7 @@ var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     // Add your own mutations here
+    updateFriends: updateFriendsMutation,
     createPerson: {
       type: createPersonPayload,
       description: 'Creates a new Person',
