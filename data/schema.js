@@ -17,6 +17,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  GraphQLInputObjectType,
 } from 'graphql';
 
 import {
@@ -40,6 +41,7 @@ import {
   Person,
   getPerson,
   getPeople,
+  addPerson,
 } from './database';
 
 /**
@@ -165,6 +167,26 @@ var queryType = new GraphQLObjectType({
   }),
 });
 
+var createPersonInputType = new GraphQLInputObjectType({
+  name: 'CreatePersonInput',
+  fields: {
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) },
+    clientMutationId: { type: new GraphQLNonNull(GraphQLString) },
+  }
+});
+
+var createPersonPayload = new GraphQLObjectType({
+  name: 'CreatePersonPayload',
+  fields: {
+    id: globalIdField('Person'),
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) },
+    clientMutationId: { type: new GraphQLNonNull(GraphQLString) },
+  }
+});
+
+
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -173,6 +195,24 @@ var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     // Add your own mutations here
+    createPerson: {
+      type: createPersonPayload,
+      description: 'Creates a new Person',
+      args: {
+        input: { type: createPersonInputType },
+      },
+      resolve: (_, args) => {
+        console.log('args:', args);
+        let { firstName, lastName } = args.input;
+        let addedPerson = addPerson({ firstName, lastName });
+        return {
+          id: addedPerson.id,
+          firstName: addedPerson.firstName,
+          lastName: addedPerson.lastName,
+          clientMutationId: args.input.clientMutationId,
+        };
+      },
+    }
   })
 });
 
@@ -183,5 +223,5 @@ var mutationType = new GraphQLObjectType({
 export var Schema = new GraphQLSchema({
   query: queryType,
   // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  mutation: mutationType
 });

@@ -6,7 +6,7 @@
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
- import { people, meets, events, locations } from './fakedata.json';
+import { people, meets, events, locations } from './fakedata.json';
 
 // Model types
 class User {}
@@ -38,7 +38,17 @@ module.exports = {
   getWidgets: () => widgets,
   User,
   Widget,
-  getPerson: id => new Person(people.find(person => person.id === id)),
+  getPerson: id => {
+    let foundPerson = people.find(person => person.id === id);
+    //if (foundPerson === undefined) { throw new Error('Not found')};
+    return new Person(foundPerson);
+  },
   getPeople: () => people.map(person => new Person(person)),
+  addPerson: personObj => {
+    let pers = new Person(personObj);
+    pers.id = people.length.toString();
+    people.push(pers);
+    return pers;
+  },
   Person,
 };
