@@ -106,6 +106,7 @@ var userType = new GraphQLObjectType({
       type: widgetConnection,
       description: 'A person\'s collection of widgets',
       args: connectionArgs,
+      resolve: (_, args) => connectionFromArray(getWidgets(), args),
     },
     person: {
       type: personType,

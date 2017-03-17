@@ -40,7 +40,6 @@ module.exports = {
   Widget,
   getPerson: id => {
     let foundPerson = people.find(person => person.id === id);
-    //if (foundPerson === undefined) { throw new Error('Not found')};
     return new Person(foundPerson);
   },
   getPeople: () => people.map(person => new Person(person)),
