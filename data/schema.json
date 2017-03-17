@@ -190,7 +190,7 @@
               "args": [
                 {
                   "name": "id",
-                  "description": null,
+                  "description": "The ID of an object",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,

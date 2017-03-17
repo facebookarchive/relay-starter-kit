@@ -108,12 +108,9 @@ var userType = new GraphQLObjectType({
     person: {
       type: personType,
       args: {
-        id: {
-          name: 'id',
-          type: new GraphQLNonNull(GraphQLID),
-        },
+        id: globalIdField('Person'),
       },
-      resolve: (_, args) => getPerson(args.id),
+      resolve: (_, args) => getPerson(fromGlobalId(args.id).id),
     },
     people: {
       type: personConnection,
