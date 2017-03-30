@@ -12,6 +12,8 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  GraphQLNonNull,
+  GraphQLID,
 } from 'graphql';
 
 import {
@@ -47,6 +49,7 @@ const globalIdFetcher = (globalId, { db }) => {
       return getUser(id);
     case 'Quote':
       return db.collection('quotes').findOne(ObjectID(id))
+      .then(console.log(JSON.stringify((id), null, 4)))
     default:
       return null
   }
@@ -63,6 +66,7 @@ const globalTypeResolver = obj => {
       return null;
     }
   }
+
 const { nodeInterface, nodeField } = nodeDefinitions(
   globalIdFetcher,
   globalTypeResolver
@@ -75,7 +79,10 @@ const { nodeInterface, nodeField } = nodeDefinitions(
 const quoteType = new GraphQLObjectType({
   name: 'Quote',
   fields: () => ({
-    id: globalIdField('Quote', obj => obj._id),
+    id: {
+        type: new GraphQLNonNull(GraphQLID),
+        resolve: (obj) => obj._id,
+      },
     text: { type: GraphQLString },
     author: { type: GraphQLString },
     likesCount: {
@@ -101,7 +108,7 @@ const { connectionType: QuotesConnectionType } = connectionDefinitions({
 const userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: globalIdField('User', obj => obj._id),
+    id: globalIdField('User'),
     quotes: {
       type: QuotesConnectionType,
       description: 'A list of the quotes in the database',
