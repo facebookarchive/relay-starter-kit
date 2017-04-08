@@ -4,8 +4,10 @@ import graphQLHTTP from 'express-graphql';
 import path from 'path';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
-import {clean} from 'require-clean';
-import {exec} from 'child_process';
+import { clean } from 'require-clean';
+import { exec } from 'child_process';
+const { MongoClient } = require('mongodb')
+const assert = require('assert')
 
 const APP_PORT = 3000;
 const GRAPHQL_PORT = 8080;
@@ -23,16 +25,16 @@ function startAppServer(callback) {
           exclude: /node_modules/,
           loader: 'babel',
           test: /\.js$/,
-        }
-      ]
+        },
+      ],
     },
-    output: {filename: '/app.js', path: '/', publicPath: '/js/'}
+    output: { filename: '/app.js', path: '/', publicPath: '/js/' },
   });
   appServer = new WebpackDevServer(compiler, {
     contentBase: '/public/',
-    proxy: {'/graphql': `http://localhost:${GRAPHQL_PORT}`},
+    proxy: { '/graphql': `http://localhost:${GRAPHQL_PORT}` },
     publicPath: '/js/',
-    stats: {colors: true}
+    stats: { colors: true },
   });
   // Serve static resources
   appServer.use('/', express.static(path.resolve(__dirname, 'public')));
@@ -44,16 +46,26 @@ function startAppServer(callback) {
   });
 }
 
+const MONGO_URL = 'mongodb://localhost:27017/test'
+
 function startGraphQLServer(callback) {
   // Expose a GraphQL endpoint
   clean('./data/schema');
-  const {Schema} = require('./data/schema');
+  const { Schema } = require('./data/schema');
   const graphQLApp = express();
-  graphQLApp.use('/', graphQLHTTP({
-    graphiql: true,
-    pretty: true,
-    schema: Schema,
-  }));
+
+  MongoClient.connect(MONGO_URL, (err, db) => {
+  assert.equal(null, err)
+  console.log('Connected to MongoDB server')
+
+    graphQLApp.use('/', graphQLHTTP({
+      graphiql: true,
+      pretty: true,
+      schema: Schema,
+      context: { db },
+    }));
+  })
+
   graphQLServer = graphQLApp.listen(GRAPHQL_PORT, () => {
     console.log(
       `GraphQL server is now running on http://localhost:${GRAPHQL_PORT}`

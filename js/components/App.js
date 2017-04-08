@@ -1,34 +1,49 @@
 import React from 'react';
 import Relay from 'react-relay';
+import { debounce } from 'lodash';
+import SearchForm from '../search-form';
+import Quote from '../quote';
 
 class App extends React.Component {
+    constructor(props) {
+    super(props)
+    this.search = debounce(this.search.bind(this), 300)
+  }
+  search(searchTerm) {
+    this.props.relay.setVariables({ searchTerm });
+  }
+
   render() {
+    // console.log(JSON.stringify(this.props, null, 4))
     return (
-      <div>
-        <h1>Widget list</h1>
-        <ul>
-          {this.props.viewer.widgets.edges.map(edge =>
-            <li key={edge.node.id}>{edge.node.name} (ID: {edge.node.id})</li>
+      <div className="quotes-library">
+        <SearchForm searchAction={this.search} />
+        <div className="quotes-list">
+          {this.props.viewer.quotes.edges.map(edge =>
+            <Quote key={edge.node.id} quote={edge.node} />
           )}
-        </ul>
+        </div>
       </div>
-    );
+    )
   }
 }
 
 export default Relay.createContainer(App, {
+  initialVariables: {
+    searchTerm: '',
+  },
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
-        widgets(first: 10) {
-          edges {
-            node {
-              id,
-              name,
-            },
-          },
-        },
-      }
+            quotes(first:100, searchTerm: $searchTerm) {
+                edges {
+                    node {
+                        id
+                        ${Quote.getFragment('quote')}
+                    }
+                }
+            }
+        }
     `,
   },
 });

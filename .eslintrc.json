@@ -1,0 +1,30 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "plugins": [
+    "react",
+    "flowtype",
+    "import"
+  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "react-app"],
+  "rules": {
+    "comma-dangle": [2, "always-multiline"],
+    "quotes": [2, "single", { "allowTemplateLiterals": true }],
+    "react/prop-types": 0,
+    "react/jsx-no-bind": 0,
+    "react/display-name": 0,
+    "new-cap": 0,
+    "object-curly-spacing": [1, "always"],
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1,
+    "import/first": 2,
+    "no-console": 0,
+    "max-len": [1, 120, 2],
+    "no-param-reassign": [2, { "props": false }],
+    "no-continue": 0,
+    "no-underscore-dangle": 0,
+    "generator-star-spacing": 0
+  }
+}
