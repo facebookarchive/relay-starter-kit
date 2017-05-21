@@ -6,6 +6,7 @@ import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import {clean} from 'require-clean';
 import {exec} from 'child_process';
+import config from './webpack.config';
 
 const APP_PORT = 3000;
 const GRAPHQL_PORT = 8080;
@@ -15,19 +16,7 @@ let appServer;
 
 function startAppServer(callback) {
   // Serve the Relay app
-  const compiler = webpack({
-    entry: path.resolve(__dirname, 'js', 'app.js'),
-    module: {
-      loaders: [
-        {
-          exclude: /node_modules/,
-          loader: 'babel',
-          test: /\.js$/,
-        }
-      ]
-    },
-    output: {filename: '/app.js', path: '/', publicPath: '/js/'}
-  });
+  const compiler = webpack(config);
   appServer = new WebpackDevServer(compiler, {
     contentBase: '/public/',
     proxy: {'/graphql': `http://localhost:${GRAPHQL_PORT}`},
