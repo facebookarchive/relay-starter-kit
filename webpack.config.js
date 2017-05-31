@@ -5,8 +5,8 @@ const config = {
   entry: path.resolve(__dirname, 'js', 'app.js'),
   resolve: {
     modules: [
-      "node_modules",
-      path.resolve(__dirname, "js")
+      'node_modules',
+      path.resolve(__dirname, 'js'),
     ]
   },
   module: {
