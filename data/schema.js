@@ -17,6 +17,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  GraphQLInputObjectType,
 } from 'graphql';
 
 import {
@@ -37,6 +38,11 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  Person,
+  getPerson,
+  getPeople,
+  addPerson,
+  makeFriends
 } from './database';
 
 /**
@@ -52,6 +58,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return getUser(id);
     } else if (type === 'Widget') {
       return getWidget(id);
+    } else if (type === 'Person') {
+      return getPerson(id);
     } else {
       return null;
     }
@@ -61,6 +69,8 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return userType;
     } else if (obj instanceof Widget)  {
       return widgetType;
+    } else if (obj instanceof Person)  {
+      return personType;
     } else {
       return null;
     }
@@ -70,6 +80,27 @@ var {nodeInterface, nodeField} = nodeDefinitions(
 /**
  * Define your own types here
  */
+
+var personType = new GraphQLObjectType({
+  name: 'Person',
+  description: 'A Person',
+  fields: () => ({
+    id: globalIdField('Person'),
+    firstName: {
+      type: GraphQLString,
+      description: 'A Person\'s firstName',
+    },
+    lastName: {
+      type: GraphQLString,
+      description: 'A Person\'s lastName',
+    },
+    friends: {
+      type: new GraphQLList(GraphQLString),
+      description: 'A Person\'s friends'
+    }
+  }),
+  interfaces: [nodeInterface],
+});
 
 var userType = new GraphQLObjectType({
   name: 'User',
@@ -82,6 +113,24 @@ var userType = new GraphQLObjectType({
       args: connectionArgs,
       resolve: (_, args) => connectionFromArray(getWidgets(), args),
     },
+    person: {
+      type: personType,
+      args: {
+        id: globalIdField('Person'),
+      },
+      resolve: (_, args) => getPerson(fromGlobalId(args.id).id),
+    },
+    people: {
+      type: personConnection,
+      description: 'The people this server knows about',
+      args: connectionArgs,
+      resolve: (collection, args) => {
+        return connectionFromArray(
+          getPeople().map(p => new Person(p)),
+          args
+        );
+    },
+    }
   }),
   interfaces: [nodeInterface],
 });
@@ -102,8 +151,11 @@ var widgetType = new GraphQLObjectType({
 /**
  * Define your own connection types here
  */
-var {connectionType: widgetConnection} =
-  connectionDefinitions({name: 'Widget', nodeType: widgetType});
+ var {connectionType: widgetConnection} =
+   connectionDefinitions({name: 'Widget', nodeType: widgetType});
+
+ var {connectionType: personConnection} =
+   connectionDefinitions({name: 'Person', nodeType: personType});
 
 /**
  * This is the type that will be the root of our query,
@@ -121,6 +173,43 @@ var queryType = new GraphQLObjectType({
   }),
 });
 
+var createPersonInputType = new GraphQLInputObjectType({
+  name: 'CreatePersonInput',
+  fields: {
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) },
+    clientMutationId: { type: new GraphQLNonNull(GraphQLString) },
+  }
+});
+
+var createPersonPayload = new GraphQLObjectType({
+  name: 'CreatePersonPayload',
+  fields: {
+    id: globalIdField('Person'),
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) },
+    clientMutationId: { type: new GraphQLNonNull(GraphQLString) },
+  }
+});
+
+var updateFriendsMutation = new mutationWithClientMutationId({
+  name: 'UpdateFriendsPayload',
+  inputFields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID)
+    },
+    friends: {
+      type: new GraphQLList(GraphQLString)
+    }
+  },
+  outputFields: {
+    person: {
+      type: personType,
+      resolve: (payload) => payload
+    }
+  },
+  mutateAndGetPayload: ({id, friends}) => makeFriends(id, friends)
+})
 /**
  * This is the type that will be the root of our mutations,
  * and the entry point into performing writes in our schema.
@@ -129,6 +218,25 @@ var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     // Add your own mutations here
+    updateFriends: updateFriendsMutation,
+    createPerson: {
+      type: createPersonPayload,
+      description: 'Creates a new Person',
+      args: {
+        input: { type: createPersonInputType },
+      },
+      resolve: (_, args) => {
+        console.log('args:', args);
+        let { firstName, lastName } = args.input;
+        let addedPerson = addPerson({ firstName, lastName });
+        return {
+          id: addedPerson.id,
+          firstName: addedPerson.firstName,
+          lastName: addedPerson.lastName,
+          clientMutationId: args.input.clientMutationId,
+        };
+      },
+    }
   })
 });
 
@@ -139,5 +247,5 @@ var mutationType = new GraphQLObjectType({
 export var Schema = new GraphQLSchema({
   query: queryType,
   // Uncomment the following after adding some mutation fields:
-  // mutation: mutationType
+  mutation: mutationType
 });
